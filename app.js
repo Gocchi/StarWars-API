@@ -1,5 +1,7 @@
 var cargarPagina=function(){
 	cargarPersonajes();
+	$(document).on("click", ".personaje", mostrarDetallePersonaje);
+
 };
 
 var cargarPersonajes=function(){
@@ -23,9 +25,26 @@ var mostrarPersonajes = function(personajes) {
               var $ul = $('#personajes');
               
          $ul.append($li);
-          $li.text(personaje.name);
-              console.log(personaje.name);
+          $li.text(personaje.name+ " " + personaje.gender);
+          $li.addClass("personaje");
+          $li.attr("data-url", personaje.homeworld);
+         
           });
     
+};
+
+var $plantillaPlaneta= '<h2>Planeta</h2>'+
+						'<p>Nombre:</strong>__nombre__</p>'+
+						'<p>Clima:</strong>__clima__</p>';
+
+var mostrarDetallePersonaje =function(){
+	var url= $(this).data("url");
+	var $planetaContenedor= $("#planeta");
+	$.getJSON(url, function(response){
+		$planetaContenedor.html(
+		$plantillaPlaneta.replace('__nombre__',response.name)
+			.replace('__clima__',response.climate)
+		);	
+	});
 };
 $(document).ready(cargarPagina);
